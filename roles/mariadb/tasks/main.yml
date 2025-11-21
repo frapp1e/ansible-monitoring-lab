@@ -1,7 +1,7 @@
 - name: Secure installation (create Grafana user)
   mysql_user:
     name: grafana_user
-    password: "Asdqwe!23"
+    password: "PASSWORD"
     priv: "*.*:ALL"
     state: present
     login_unix_socket: /var/lib/mysql/mysql.sock
