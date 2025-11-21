@@ -1,0 +1,38 @@
+---
+- name: Create Prometheus folder
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: Extract Prometheus
+  unarchive:
+    src: prometheus.tar.gz
+    dest: /opt/
+    remote_src: no
+
+- name: Copy Prometheus binary to /usr/local/bin
+  copy:
+    src: /opt/prometheus-2.53.0.linux-amd64/prometheus
+    dest: /usr/local/bin/prometheus
+    mode: '0755'
+
+- name: Copy Prometheus configuration
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+
+- name: Deploy Prometheus systemd service
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable & start Prometheus
+  systemd:
+    name: prometheus
+    enabled: yes
+    state: started
+
